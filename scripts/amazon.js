@@ -53,5 +53,17 @@ products.forEach(function(product){
     let addToCartButton=document.createElement("button");
     addToCartButton.classList="add-to-cart-button button-primary";
     addToCartButton.innerHTML="Add to Cart";
+    addToCartButton.addEventListener("click", function(){
+        let productToAdd={
+            id:product.id,
+            image:product.image,
+            name:product.name,
+            rating:product.rating,
+            priceCents:product.priceCents,
+            keywords:product.keywords
+        }
+        cart.push(productToAdd)
+        console.log(cart);
+    });
     productContainer.appendChild(addToCartButton);
 })
