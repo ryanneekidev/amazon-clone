@@ -1,0 +1,154 @@
+newCart=JSON.parse(localStorage.getItem("savedCart"))
+
+newCart.forEach(function(product){
+    let orderSummary=document.querySelector(".order-summary");
+    //Create cart item container
+    let cartItemContainer=document.createElement("div");
+    cartItemContainer.className="cart-item-container";
+    orderSummary.appendChild(cartItemContainer);
+    //Create delivery date
+    let deliveryDate=document.createElement("div");
+    deliveryDate.className="delivery-date";
+    deliveryDate.innerHTML=todaysDate();
+    cartItemContainer.appendChild(deliveryDate);
+    //Create item details grid
+    let cartItemDetailsGrid=document.createElement("div");
+    cartItemDetailsGrid.className="cart-item-details-grid";
+    cartItemContainer.appendChild(cartItemDetailsGrid);
+    //Create product image
+    let productImage=document.createElement("img");
+    productImage.className="product-image";
+    productImage.setAttribute("src", product.image);
+    cartItemDetailsGrid.appendChild(productImage);
+    //Create cart item details
+    let cartItemDetails=document.createElement("div");
+    cartItemDetails.className="cart-item-details";
+    cartItemDetailsGrid.appendChild(cartItemDetails);
+    //Create product name
+    let productName=document.createElement("div");
+    productName.className="product-name";
+    productName.innerHTML=product.name;
+    cartItemDetails.appendChild(productName);
+    //Create product price
+    let productPrice=document.createElement("div");
+    productPrice.className="product-price";
+    productPrice.innerHTML="$"+product.priceCents/100;
+    cartItemDetails.appendChild(productPrice);
+    //Create product quantity
+    let productQuantity=document.createElement("div");
+    productQuantity.className="product-quantity";
+    cartItemDetails.appendChild(productQuantity);
+    //Create quantity label
+    let quantityLabel=document.createElement("span");
+    quantityLabel.className="quantity-label";
+    quantityLabel.innerHTML="Quantity: "+product.quantity+" ";
+    productQuantity.appendChild(quantityLabel);
+    //Create update quantity link
+    let updateQuantityLink=document.createElement("span");
+    updateQuantityLink.classList="update-quantity-link link-primary";
+    updateQuantityLink.innerHTML="Update";
+    productQuantity.appendChild(updateQuantityLink);
+    //Create delete quantity link
+    let deleteQuantityLink=document.createElement("span");
+    deleteQuantityLink.classList="delete-quantity-link link-primary";
+    deleteQuantityLink.innerHTML="Delete";
+    productQuantity.appendChild(deleteQuantityLink);
+    //Create delivery options
+    let deliveryOptions=document.createElement("div");
+    deliveryOptions.className="delivery-options";
+    cartItemDetailsGrid.appendChild(deliveryOptions);
+    //Create delivery options title
+    let deliveryOptionsTitle=document.createElement("div");
+    deliveryOptionsTitle.className="delivery-options-title";
+    deliveryOptionsTitle.innerHTML="Choose a delivery option:"
+    deliveryOptions.appendChild(deliveryOptionsTitle);
+
+
+    //Create delivery option 1
+    let deliveryOption1=document.createElement("div");
+    deliveryOption1.className="delivery-option";
+    deliveryOptions.appendChild(deliveryOption1);
+    //Create delivery option 1 input
+    let deliveryOptionInput1=document.createElement("input");
+    deliveryOptionInput1.className="delivery-option-input";
+    deliveryOptionInput1.setAttribute("type", "radio");
+    deliveryOptionInput1.setAttribute("checked", "");
+    deliveryOptionInput1.setAttribute("name", "delivery-option-input");
+    deliveryOption1.appendChild(deliveryOptionInput1);
+    //Create delivery option info
+    let deliveryOptionInfo1=document.createElement("div");
+    deliveryOption1.appendChild(deliveryOptionInfo1);
+    //Create option delivery date
+    let deliveryOptionDate1=document.createElement("div");
+    deliveryOptionDate1.className="delivery-option-date";
+    deliveryOptionDate1.innerHTML=todaysDate();
+    deliveryOptionInfo1.appendChild(deliveryOptionDate1);
+    //Create option delivery price
+    let deliveryOptionPrice1=document.createElement("div");
+    deliveryOptionPrice1.className="delivery-option-price";
+    deliveryOptionPrice1.innerHTML="FREE Shipping";
+    deliveryOptionInfo1.appendChild(deliveryOptionPrice1);
+
+    //Create delivery option 2
+    let deliveryOption2=document.createElement("div");
+    deliveryOption2.className="delivery-option";
+    deliveryOptions.appendChild(deliveryOption2);
+    //Create delivery option 2 input
+    let deliveryOptionInput2=document.createElement("input");
+    deliveryOptionInput2.className="delivery-option-input";
+    deliveryOptionInput2.setAttribute("type", "radio");
+    deliveryOptionInput2.setAttribute("name", "delivery-option-input");
+    deliveryOption2.appendChild(deliveryOptionInput2);
+    //Create delivery option info
+    let deliveryOptionInfo2=document.createElement("div");
+    deliveryOption2.appendChild(deliveryOptionInfo2);
+    //Create option delivery date
+    let deliveryOptionDate2=document.createElement("div");
+    deliveryOptionDate2.className="delivery-option-date";
+    deliveryOptionDate2.innerHTML=todaysDate();
+    deliveryOptionInfo2.appendChild(deliveryOptionDate2);
+    //Create option delivery price
+    let deliveryOptionPrice2=document.createElement("div");
+    deliveryOptionPrice2.className="delivery-option-price";
+    deliveryOptionPrice2.innerHTML="$4.99 - Shipping";
+    deliveryOptionInfo2.appendChild(deliveryOptionPrice2);
+
+    //Create delivery option 3
+
+    let deliveryOption3=document.createElement("div");
+    deliveryOption3.className="delivery-option";
+    deliveryOptions.appendChild(deliveryOption3);
+    //Create delivery option 2 input
+    let deliveryOptionInput3=document.createElement("input");
+    deliveryOptionInput3.className="delivery-option-input";
+    deliveryOptionInput3.setAttribute("type", "radio");
+    deliveryOptionInput3.setAttribute("name", "delivery-option-input");
+    deliveryOption3.appendChild(deliveryOptionInput3);
+    //Create delivery option info
+    let deliveryOptionInfo3=document.createElement("div");
+    deliveryOption3.appendChild(deliveryOptionInfo3);
+    //Create option delivery date
+    let deliveryOptionDate3=document.createElement("div");
+    deliveryOptionDate3.className="delivery-option-date";
+    deliveryOptionDate3.innerHTML=todaysDate();
+    deliveryOptionInfo3.appendChild(deliveryOptionDate3);
+    //Create option delivery price
+    let deliveryOptionPrice3=document.createElement("div");
+    deliveryOptionPrice3.className="delivery-option-price";
+    deliveryOptionPrice3.innerHTML="$9.99 - Shipping";
+    deliveryOptionInfo3.appendChild(deliveryOptionPrice3);
+
+})
+
+function todaysDate(){
+    let today=new Date();
+    let daysNames=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let monthNames=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    let todayIndex=today.getDay();
+    let todayIndexInMonth=today.getDate();
+    let todayName=daysNames[todayIndex];
+    let currentMonth=today.getMonth();
+    let currentMonthName=monthNames[currentMonth];
+    let dateString=todayName+", "+currentMonthName+" "+todayIndexInMonth; 
+    return dateString;
+}

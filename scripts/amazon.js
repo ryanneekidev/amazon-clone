@@ -60,10 +60,12 @@ products.forEach(function(product){
             name:product.name,
             rating:product.rating,
             priceCents:product.priceCents,
-            keywords:product.keywords
+            keywords:product.keywords,
+            quantity:addToCartButton.parentElement.querySelector("select").value
         }
         cart.push(productToAdd)
         console.log(cart);
+        localStorage.setItem("savedCart", JSON.stringify(cart));
     });
     productContainer.appendChild(addToCartButton);
 })
