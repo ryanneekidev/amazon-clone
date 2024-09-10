@@ -1,6 +1,30 @@
 newCart=JSON.parse(localStorage.getItem("savedCart"))
 
+let paymentSummaryMoneyShipping=document.querySelector(".payment-summary-money-shipping");
+
+let totalPaymentSummaryMoney=document.querySelector(".total-payment-summary-money");
+
+let taxPaymentSummaryMoney=document.querySelector(".tax-payment-summary-money");
+
+let grandTotalPaymentSummaryMoney=document.querySelector(".grand-total-payment-summary-money");
+
+let totalShippingCost=0;
+
+let totalCartCost=0;
+
+let totalBeforeTax=0;
+
+let taxMoney=0;
+
+let grandTotal=0
+
+if(localStorage.getItem("totalShippingCost")==null){
+    localStorage.setItem("totalShippingCost", 0);
+}
+
 newCart.forEach(function(product){
+    //Render cart summary
+
     let orderSummary=document.querySelector(".order-summary");
     //Create cart item container
     let cartItemContainer=document.createElement("div");
@@ -46,14 +70,114 @@ newCart.forEach(function(product){
     //Create update quantity link
     let updateQuantityLink=document.createElement("span");
     updateQuantityLink.classList="update-quantity-link link-primary";
-    updateQuantityLink.innerHTML="Update";
+    updateQuantityLink.innerHTML="Update ";
+    updateQuantityLink.addEventListener("click", function(){
+        let newQuantityInput=document.createElement("input");
+        newQuantityInput.className="new-quantity-input";
+        newQuantityInput.setAttribute("type", "number");
+        newQuantityInput.setAttribute("value", "1");
+        let saveQuantityLink=document.createElement("span");
+        saveQuantityLink.classList="save-quantity-link link-primary";
+        saveQuantityLink.innerHTML="Save";
+        let updateAndSaveDiv=document.createElement("div");
+        updateAndSaveDiv.appendChild(newQuantityInput);
+        updateAndSaveDiv.appendChild(saveQuantityLink);
+        saveQuantityLink.addEventListener("click", function(){
+            let productToEdit=newCart.find(obj=>obj.name==product.name);
+            productToEdit.quantity=parseInt(newQuantityInput.value);
+            console.log(newCart);
+            localStorage.setItem("savedCart", JSON.stringify(newCart));
+            quantityLabel.innerHTML="Quantity: "+product.quantity+" ";
+            productQuantity.replaceChild(updateQuantityLink, updateAndSaveDiv);
+
+            let returnToHomeLink=document.querySelector(".return-to-home-link");
+            let totalCartItems=0;
+            if(newCart.length!=0){
+                for(let a=0;a<newCart.length;a++){
+                    totalCartItems+=newCart[a].quantity;
+                }
+            }
+            returnToHomeLink.innerHTML=totalCartItems+" items";
+
+            let paymentSummaryCounterNet=document.querySelector(".payment-summary-counter-net");
+            paymentSummaryCounterNet.innerHTML="Items ("+totalCartItems+")";
+
+            totalCartCost=0;
+            if(newCart.length!=0){
+                for(let e=0;e<newCart.length;e++){
+                    totalCartCost+=newCart[e].priceCents*newCart[e].quantity;
+                }
+            }
+
+            paymentSummaryMoneyNet.innerHTML=("$"+totalCartCost/100);
+            totalShippingCost=0;
+            for(let t=0;t<newCart.length;t++){
+                totalShippingCost+=newCart[t].deliveryCostz;
+            }
+            localStorage.setItem("totalShippingCost", totalShippingCost);
+            paymentSummaryMoneyShipping.innerHTML="$"+localStorage.getItem("totalShippingCost")/100;
+
+            totalBeforeTax=0;
+            totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
+            totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100);
+            
+            taxMoney=((totalBeforeTax*0.10)/100).toFixed(2);
+            taxPaymentSummaryMoney.innerHTML="$"+taxMoney;
+            
+            grandTotal=0;
+            grandTotal=totalBeforeTax/100+parseInt(taxMoney);
+            grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;
+        })
+        productQuantity.replaceChild(updateAndSaveDiv, updateQuantityLink);
+    })
     productQuantity.appendChild(updateQuantityLink);
     //Create delete quantity link
     let deleteQuantityLink=document.createElement("span");
     deleteQuantityLink.classList="delete-quantity-link link-primary";
     deleteQuantityLink.innerHTML="Delete";
+    deleteQuantityLink.addEventListener("click", function(){
+        newCart=newCart.filter(item=>item!==product);
+        orderSummary.removeChild(event.target.parentElement.parentElement.parentElement.parentElement);
+        localStorage.setItem("savedCart", JSON.stringify(newCart));
+        totalCartCost=0;
+        if(newCart.length!=0){
+            for(let e=0;e<newCart.length;e++){
+                totalCartCost+=newCart[e].priceCents*newCart[e].quantity;
+            }
+        }
+        paymentSummaryMoneyNet.innerHTML=("$"+totalCartCost/100);
+        totalShippingCost=0;
+        for(let t=0;t<newCart.length;t++){
+            totalShippingCost+=newCart[t].deliveryCostz;
+        }
+        localStorage.setItem("totalShippingCost", totalShippingCost);
+        totalBeforeTax=0;
+        totalBeforeTax=totalCartCost+totalShippingCost;
+        totalPaymentSummaryMoney.innerHTML="$"+totalBeforeTax/100;
+        paymentSummaryMoneyShipping.innerHTML="$"+localStorage.getItem("totalShippingCost")/100;
+
+        totalBeforeTax=0;
+        totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
+        totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100);
+
+        taxMoney=((totalBeforeTax*0.10)/100).toFixed(2);
+        taxPaymentSummaryMoney.innerHTML="$"+taxMoney;
+
+        grandTotal=0;
+        grandTotal=totalBeforeTax/100+parseInt(taxMoney);
+        grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;
+
+        let totalCartItems=0;
+        if(newCart.length!=0){
+            for(let a=0;a<newCart.length;a++){
+                totalCartItems+=newCart[a].quantity;
+            }
+        }
+        returnToHomeLink.innerHTML=totalCartItems+" items";
+    })
     productQuantity.appendChild(deleteQuantityLink);
     //Create delivery options
+    let uniqueRadioId=Math.random(1,9999);
     let deliveryOptions=document.createElement("div");
     deliveryOptions.className="delivery-options";
     cartItemDetailsGrid.appendChild(deliveryOptions);
@@ -73,7 +197,39 @@ newCart.forEach(function(product){
     deliveryOptionInput1.className="delivery-option-input";
     deliveryOptionInput1.setAttribute("type", "radio");
     deliveryOptionInput1.setAttribute("checked", "");
-    deliveryOptionInput1.setAttribute("name", "delivery-option-input");
+    deliveryOptionInput1.setAttribute("name", "delivery-option-input"+uniqueRadioId);
+    deliveryOptionInput1.addEventListener("click", function(){
+        if(deliveryOptionInput1.checked==true){
+            product.deliveryOptionz="1";
+            product.deliveryCostz=0;
+            localStorage.setItem("savedCart", JSON.stringify(newCart));
+        }
+        console.log(newCart);
+        totalShippingCost=0;
+        localStorage.setItem("totalShippingCost", totalShippingCost);
+        for(let t=0;t<newCart.length;t++){
+            totalShippingCost+=newCart[t].deliveryCostz;
+        }
+        localStorage.setItem("totalShippingCost", totalShippingCost);
+        totalBeforeTax=0;
+        totalBeforeTax=totalCartCost+totalShippingCost;
+        totalPaymentSummaryMoney.innerHTML="$"+totalBeforeTax/100;
+        paymentSummaryMoneyShipping.innerHTML="$"+localStorage.getItem("totalShippingCost")/100;
+
+        totalBeforeTax=0;
+        totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
+        totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100);
+        
+        taxMoney=((totalBeforeTax*0.10)/100).toFixed(2);
+        taxPaymentSummaryMoney.innerHTML="$"+taxMoney;
+        
+        grandTotal=0;
+        grandTotal=totalBeforeTax/100+parseInt(taxMoney);
+        grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;
+    })
+    if(product.deliveryOptionz=="1"){
+        deliveryOptionInput1.setAttribute("checked", true);
+    }
     deliveryOption1.appendChild(deliveryOptionInput1);
     //Create delivery option info
     let deliveryOptionInfo1=document.createElement("div");
@@ -97,7 +253,39 @@ newCart.forEach(function(product){
     let deliveryOptionInput2=document.createElement("input");
     deliveryOptionInput2.className="delivery-option-input";
     deliveryOptionInput2.setAttribute("type", "radio");
-    deliveryOptionInput2.setAttribute("name", "delivery-option-input");
+    deliveryOptionInput2.setAttribute("name", "delivery-option-input"+uniqueRadioId);
+    deliveryOptionInput2.addEventListener("click", function(){
+        if(deliveryOptionInput2.checked==true){
+            product.deliveryOptionz="2";
+            product.deliveryCostz=499;
+            localStorage.setItem("savedCart", JSON.stringify(newCart));
+        }
+        totalShippingCost=0;
+        localStorage.setItem("totalShippingCost", totalShippingCost);
+        console.log(newCart);
+        for(let t=0;t<newCart.length;t++){
+            totalShippingCost+=newCart[t].deliveryCostz;
+        }
+        localStorage.setItem("totalShippingCost", totalShippingCost);
+        totalBeforeTax=0;
+        totalBeforeTax=totalCartCost+totalShippingCost;
+        totalPaymentSummaryMoney.innerHTML="$"+totalBeforeTax/100;
+        paymentSummaryMoneyShipping.innerHTML="$"+localStorage.getItem("totalShippingCost")/100;
+
+        totalBeforeTax=0;
+        totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
+        totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100);
+        
+        taxMoney=((totalBeforeTax*0.10)/100).toFixed(2);
+        taxPaymentSummaryMoney.innerHTML="$"+taxMoney;
+        
+        grandTotal=0;
+        grandTotal=totalBeforeTax/100+parseInt(taxMoney);
+        grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;
+    })
+    if(product.deliveryOptionz=="2"){
+        deliveryOptionInput2.setAttribute("checked", true);
+    }
     deliveryOption2.appendChild(deliveryOptionInput2);
     //Create delivery option info
     let deliveryOptionInfo2=document.createElement("div");
@@ -122,7 +310,39 @@ newCart.forEach(function(product){
     let deliveryOptionInput3=document.createElement("input");
     deliveryOptionInput3.className="delivery-option-input";
     deliveryOptionInput3.setAttribute("type", "radio");
-    deliveryOptionInput3.setAttribute("name", "delivery-option-input");
+    deliveryOptionInput3.setAttribute("name", "delivery-option-input"+uniqueRadioId);
+    deliveryOptionInput3.addEventListener("click", function(){
+        if(deliveryOptionInput3.checked==true){
+            product.deliveryOptionz="3";
+            product.deliveryCostz=999;
+            localStorage.setItem("savedCart", JSON.stringify(newCart));
+        }
+        totalShippingCost=0;
+        localStorage.setItem("totalShippingCost", totalShippingCost);
+        console.log(newCart);
+        for(let t=0;t<newCart.length;t++){
+            totalShippingCost+=newCart[t].deliveryCostz;
+        }
+        localStorage.setItem("totalShippingCost", totalShippingCost);
+        totalBeforeTax=0;
+        totalBeforeTax=totalCartCost+totalShippingCost;
+        totalPaymentSummaryMoney.innerHTML="$"+totalBeforeTax/100;
+        paymentSummaryMoneyShipping.innerHTML="$"+localStorage.getItem("totalShippingCost")/100;
+
+        totalBeforeTax=0;
+        totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
+        totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100);
+        
+        taxMoney=((totalBeforeTax*0.10)/100).toFixed(2);
+        taxPaymentSummaryMoney.innerHTML="$"+taxMoney;
+        
+        grandTotal=0;
+        grandTotal=totalBeforeTax/100+parseInt(taxMoney);
+        grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;
+    })
+    if(product.deliveryOptionz=="3"){
+        deliveryOptionInput3.setAttribute("checked", true);
+    }
     deliveryOption3.appendChild(deliveryOptionInput3);
     //Create delivery option info
     let deliveryOptionInfo3=document.createElement("div");
@@ -137,7 +357,6 @@ newCart.forEach(function(product){
     deliveryOptionPrice3.className="delivery-option-price";
     deliveryOptionPrice3.innerHTML="$9.99 - Shipping";
     deliveryOptionInfo3.appendChild(deliveryOptionPrice3);
-
 })
 
 function todaysDate(){
@@ -152,3 +371,45 @@ function todaysDate(){
     let dateString=todayName+", "+currentMonthName+" "+todayIndexInMonth; 
     return dateString;
 }
+
+let returnToHomeLink=document.querySelector(".return-to-home-link");
+let totalCartItems=0;
+if(newCart.length!=0){
+    for(let a=0;a<newCart.length;a++){
+        totalCartItems+=newCart[a].quantity;
+    }
+}
+returnToHomeLink.innerHTML=totalCartItems+" items";
+
+let paymentSummaryCounterNet=document.querySelector(".payment-summary-counter-net");
+paymentSummaryCounterNet.innerHTML="Items ("+totalCartItems+")";
+
+let paymentSummaryMoneyNet=document.querySelector(".payment-summary-money-net");
+
+if(newCart.length!=0){
+    for(let e=0;e<newCart.length;e++){
+        totalCartCost+=newCart[e].priceCents*newCart[e].quantity;
+    }
+}
+
+totalShippingCost=0;
+localStorage.setItem("totalShippingCost", totalShippingCost);
+for(let t=0;t<newCart.length;t++){
+    totalShippingCost+=newCart[t].deliveryCostz;
+}
+localStorage.setItem("totalShippingCost", totalShippingCost);
+
+paymentSummaryMoneyNet.innerHTML=("$"+totalCartCost/100);
+paymentSummaryMoneyShipping.innerHTML=("$"+localStorage.getItem("totalShippingCost")/100);
+console.log(totalShippingCost);
+
+totalBeforeTax=0;
+totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
+totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100);
+
+taxMoney=((totalBeforeTax*0.10)/100).toFixed(2);
+taxPaymentSummaryMoney.innerHTML="$"+taxMoney;
+
+grandTotal=0;
+grandTotal=totalBeforeTax/100+parseInt(taxMoney);
+grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;

@@ -1,3 +1,9 @@
+if(localStorage.getItem("savedCart")==null){
+    localStorage.setItem("savedCart", JSON.stringify(cart));
+}
+
+let cartQuantity=document.querySelector(".cart-quantity");
+
 products.forEach(function(product){
     const productsGrid=document.querySelector(".products-grid");
     //Create product container
@@ -54,18 +60,48 @@ products.forEach(function(product){
     addToCartButton.classList="add-to-cart-button button-primary";
     addToCartButton.innerHTML="Add to Cart";
     addToCartButton.addEventListener("click", function(){
-        let productToAdd={
-            id:product.id,
-            image:product.image,
-            name:product.name,
-            rating:product.rating,
-            priceCents:product.priceCents,
-            keywords:product.keywords,
-            quantity:addToCartButton.parentElement.querySelector("select").value
+        let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
+        let productExists=remoteCart.some(obj=>obj.name===product.name);
+        if(!productExists){
+            let productToAdd={
+                id:product.id,
+                image:product.image,
+                name:product.name,
+                rating:product.rating,
+                priceCents:product.priceCents,
+                keywords:product.keywords,
+                quantity:parseInt(addToCartButton.parentElement.querySelector("select").value),
+                deliveryOptionz:"1",
+                deliveryCostz:0,
+            }
+            remoteCart.push(productToAdd);
+            localStorage.setItem("savedCart", JSON.stringify(remoteCart));
+        }else{
+            let productToEdit=remoteCart.find(obj=>obj.name==product.name);
+            productToEdit.quantity=parseInt(productToEdit.quantity)+parseInt(addToCartButton.parentElement.querySelector("select").value);
+            localStorage.setItem("savedCart", JSON.stringify(remoteCart));
+            console.log(remoteCart);
         }
-        cart.push(productToAdd)
-        console.log(cart);
-        localStorage.setItem("savedCart", JSON.stringify(cart));
+        let totalCartItems=0;
+        if(remoteCart.length!=0){
+            for(let a=0;a<remoteCart.length;a++){
+                totalCartItems+=remoteCart[a].quantity;
+            }
+        }else{
+            totalCartItems=0;
+        }
+        cartQuantity.innerHTML=totalCartItems;
     });
     productContainer.appendChild(addToCartButton);
 })
+
+let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
+let totalCartItems=0;
+if(remoteCart.length!=0){
+    for(let a=0;a<remoteCart.length;a++){
+        totalCartItems+=remoteCart[a].quantity;
+    }
+}else{
+    totalCartItems=0;
+}
+cartQuantity.innerHTML=totalCartItems;
