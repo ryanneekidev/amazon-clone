@@ -24,7 +24,6 @@ if(localStorage.getItem("totalShippingCost")==null){
 
 newCart.forEach(function(product){
     //Render cart summary
-
     let orderSummary=document.querySelector(".order-summary");
     //Create cart item container
     let cartItemContainer=document.createElement("div");

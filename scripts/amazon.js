@@ -1,3 +1,5 @@
+import {products} from "/data/products.js";
+
 if(localStorage.getItem("savedCart")==null){
     localStorage.setItem("savedCart", JSON.stringify(cart));
 }
