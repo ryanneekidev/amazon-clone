@@ -1,7 +1,11 @@
+//Get products array from products.js file
 import {products} from "/data/products.js";
 
+let initCart=[];
+
+//Create new cart in localStorage if it doesn't exist
 if(localStorage.getItem("savedCart")==null){
-    localStorage.setItem("savedCart", JSON.stringify(cart));
+    localStorage.setItem("savedCart", JSON.stringify(initCart));
 }
 
 let cartQuantity=document.querySelector(".cart-quantity");
@@ -62,9 +66,9 @@ products.forEach(function(product){
     addToCartButton.classList="add-to-cart-button button-primary";
     addToCartButton.innerHTML="Add to Cart";
     addToCartButton.addEventListener("click", function(){
-        let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
         let productExists=remoteCart.some(obj=>obj.name===product.name);
         if(!productExists){
+            let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
             let productToAdd={
                 id:product.id,
                 image:product.image,
@@ -75,6 +79,7 @@ products.forEach(function(product){
                 quantity:parseInt(addToCartButton.parentElement.querySelector("select").value),
                 deliveryOptionz:"1",
                 deliveryCostz:0,
+                deliveryEstDate:dayjs().add(28, "day").format("dddd, MMMM DD"),
             }
             remoteCart.push(productToAdd);
             localStorage.setItem("savedCart", JSON.stringify(remoteCart));
@@ -97,6 +102,7 @@ products.forEach(function(product){
     productContainer.appendChild(addToCartButton);
 })
 
+//Update cart quantity
 let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
 let totalCartItems=0;
 if(remoteCart.length!=0){

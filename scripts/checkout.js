@@ -32,7 +32,7 @@ newCart.forEach(function(product){
     //Create delivery date
     let deliveryDate=document.createElement("div");
     deliveryDate.className="delivery-date";
-    deliveryDate.innerHTML=todaysDate();
+    deliveryDate.innerHTML="Delivery date: "+product.deliveryEstDate;
     cartItemContainer.appendChild(deliveryDate);
     //Create item details grid
     let cartItemDetailsGrid=document.createElement("div");
@@ -201,7 +201,10 @@ newCart.forEach(function(product){
         if(deliveryOptionInput1.checked==true){
             product.deliveryOptionz="1";
             product.deliveryCostz=0;
+            product.deliveryEstDate=dayjs().add(28, "day").format("dddd, MMMM DD");
             localStorage.setItem("savedCart", JSON.stringify(newCart));
+            deliveryDate.innerHTML="Delivery date: "+product.deliveryEstDate;
+            deliveryOptionDate1.innerHTML=product.deliveryEstDate;
         }
         console.log(newCart);
         totalShippingCost=0;
@@ -236,7 +239,7 @@ newCart.forEach(function(product){
     //Create option delivery date
     let deliveryOptionDate1=document.createElement("div");
     deliveryOptionDate1.className="delivery-option-date";
-    deliveryOptionDate1.innerHTML=todaysDate();
+    deliveryOptionDate1.innerHTML=product.deliveryEstDate;
     deliveryOptionInfo1.appendChild(deliveryOptionDate1);
     //Create option delivery price
     let deliveryOptionPrice1=document.createElement("div");
@@ -257,7 +260,10 @@ newCart.forEach(function(product){
         if(deliveryOptionInput2.checked==true){
             product.deliveryOptionz="2";
             product.deliveryCostz=499;
+            product.deliveryEstDate=dayjs().add(14, "day").format("dddd, MMMM DD");
             localStorage.setItem("savedCart", JSON.stringify(newCart));
+            deliveryDate.innerHTML="Delivery date: "+product.deliveryEstDate;
+            deliveryOptionDate2.innerHTML=product.deliveryEstDate;
         }
         totalShippingCost=0;
         localStorage.setItem("totalShippingCost", totalShippingCost);
@@ -292,7 +298,7 @@ newCart.forEach(function(product){
     //Create option delivery date
     let deliveryOptionDate2=document.createElement("div");
     deliveryOptionDate2.className="delivery-option-date";
-    deliveryOptionDate2.innerHTML=todaysDate();
+    deliveryOptionDate2.innerHTML=dayjs().add(14, "day").format("dddd, MMMM DD");
     deliveryOptionInfo2.appendChild(deliveryOptionDate2);
     //Create option delivery price
     let deliveryOptionPrice2=document.createElement("div");
@@ -314,7 +320,10 @@ newCart.forEach(function(product){
         if(deliveryOptionInput3.checked==true){
             product.deliveryOptionz="3";
             product.deliveryCostz=999;
+            product.deliveryEstDate=dayjs().add(7, "day").format("dddd, MMMM DD");
             localStorage.setItem("savedCart", JSON.stringify(newCart));
+            deliveryDate.innerHTML="Delivery date: "+product.deliveryEstDate;
+            deliveryOptionDate3.innerHTML=product.deliveryEstDate;
         }
         totalShippingCost=0;
         localStorage.setItem("totalShippingCost", totalShippingCost);
@@ -349,7 +358,7 @@ newCart.forEach(function(product){
     //Create option delivery date
     let deliveryOptionDate3=document.createElement("div");
     deliveryOptionDate3.className="delivery-option-date";
-    deliveryOptionDate3.innerHTML=todaysDate();
+    deliveryOptionDate3.innerHTML=dayjs().add(7, "day").format("dddd, MMMM DD");
     deliveryOptionInfo3.appendChild(deliveryOptionDate3);
     //Create option delivery price
     let deliveryOptionPrice3=document.createElement("div");
@@ -412,3 +421,5 @@ taxPaymentSummaryMoney.innerHTML="$"+taxMoney;
 grandTotal=0;
 grandTotal=totalBeforeTax/100+parseInt(taxMoney);
 grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;
+
+console.log(dayjs().add(7, "day").format("dddd, MMMM DD"));
