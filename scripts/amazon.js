@@ -10,6 +10,88 @@ if(localStorage.getItem("savedCart")==null){
 
 let cartQuantity=document.querySelector(".cart-quantity");
 
+let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
+
+//Define product class
+class Product{
+    #id;
+    #image;
+    #name;
+    #rating;
+    #priceCents;
+    #keywords;
+    #quantity;
+    #deliveryOptionz;
+    #deliveryCostz;
+    #deliveryEstDate=dayjs().add(28, "day").format("dddd, MMMM DD");
+
+    constructor(productDetails){
+        this.#id=productDetails.id;
+        this.#image=productDetails.image;
+        this.#name=productDetails.name;
+        this.#rating=productDetails.rating;
+        this.#priceCents=productDetails.priceCents;
+        this.#keywords=productDetails.keywords;
+        this.#quantity=productDetails.quantity;
+        this.#deliveryOptionz=productDetails.deliveryOptionz;
+        this.#deliveryCostz=productDetails.deliveryCostz;
+        this.#deliveryEstDate=productDetails.deliveryEstDate;
+    }
+
+    getId(){
+        return this.#id;
+    }
+
+    getName(){
+        return this.#name;
+    }
+
+    getRating(){
+        return this.#rating;
+    }
+
+    getPrice(){
+        return this.#priceCents;
+    }
+
+    getKeywords(){
+        return this.#keywords;
+    }
+
+    getQuantity(){
+        return this.#quantity;
+    }
+
+    getDeliveryOptionz(){
+        return this.#deliveryOptionz;
+    }
+
+    getDeliveryCostz(){
+        return this.#deliveryCostz;
+    }
+
+    getDeliveryEstDate(){
+        return this.#deliveryCostz;
+    }
+
+    //Editing functions
+    setQuantity(newQuantity){
+        this.#quantity=newQuantity;
+    }
+
+    setDeliveryOptionz(newDeliveryOptionz){
+        this.#deliveryOptionz=newDeliveryOptionz;
+    }
+
+    setDeliveryCostz(newDeliveryCostz){
+        this.#deliveryCostz=newDeliveryCostz;
+    }
+
+    setDeliveryEstDate(newDeliveryEstDate){
+        this.#deliveryEstDate=newDeliveryEstDate;
+    }
+}
+
 products.forEach(function(product){
     const productsGrid=document.querySelector(".products-grid");
     //Create product container
@@ -47,7 +129,7 @@ products.forEach(function(product){
     //Create product price
     let productPrice=document.createElement("div");
     productPrice.className="product-price";
-    productPrice.innerHTML="$"+product.priceCents/100;
+    productPrice.innerHTML="$"+(product.priceCents/100).toFixed(2);
     productContainer.appendChild(productPrice);
     //Create product quantity container
     let productQuantityContainer=document.createElement("div");
@@ -67,8 +149,7 @@ products.forEach(function(product){
     addToCartButton.innerHTML="Add to Cart";
     addToCartButton.addEventListener("click", function(){
         let productExists=remoteCart.some(obj=>obj.name===product.name);
-        if(!productExists){
-            let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
+        if(!productExists){         
             let productToAdd={
                 id:product.id,
                 image:product.image,
@@ -89,6 +170,7 @@ products.forEach(function(product){
             localStorage.setItem("savedCart", JSON.stringify(remoteCart));
             console.log(remoteCart);
         }
+        //Update cart quantity label
         let totalCartItems=0;
         if(remoteCart.length!=0){
             for(let a=0;a<remoteCart.length;a++){
@@ -102,8 +184,7 @@ products.forEach(function(product){
     productContainer.appendChild(addToCartButton);
 })
 
-//Update cart quantity
-let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
+//Update cart quantity label
 let totalCartItems=0;
 if(remoteCart.length!=0){
     for(let a=0;a<remoteCart.length;a++){

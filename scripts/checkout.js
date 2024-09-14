@@ -1,21 +1,14 @@
 newCart=JSON.parse(localStorage.getItem("savedCart"))
 
 let paymentSummaryMoneyShipping=document.querySelector(".payment-summary-money-shipping");
-
 let totalPaymentSummaryMoney=document.querySelector(".total-payment-summary-money");
-
 let taxPaymentSummaryMoney=document.querySelector(".tax-payment-summary-money");
-
 let grandTotalPaymentSummaryMoney=document.querySelector(".grand-total-payment-summary-money");
 
 let totalShippingCost=0;
-
 let totalCartCost=0;
-
 let totalBeforeTax=0;
-
 let taxMoney=0;
-
 let grandTotal=0
 
 if(localStorage.getItem("totalShippingCost")==null){
@@ -55,7 +48,7 @@ newCart.forEach(function(product){
     //Create product price
     let productPrice=document.createElement("div");
     productPrice.className="product-price";
-    productPrice.innerHTML="$"+product.priceCents/100;
+    productPrice.innerHTML="$"+(product.priceCents/100).toFixed(2);
     cartItemDetails.appendChild(productPrice);
     //Create product quantity
     let productQuantity=document.createElement("div");
@@ -407,19 +400,17 @@ for(let t=0;t<newCart.length;t++){
 }
 localStorage.setItem("totalShippingCost", totalShippingCost);
 
-paymentSummaryMoneyNet.innerHTML=("$"+totalCartCost/100);
-paymentSummaryMoneyShipping.innerHTML=("$"+localStorage.getItem("totalShippingCost")/100);
+paymentSummaryMoneyNet.innerHTML="$"+(totalCartCost/100).toFixed(2);
+paymentSummaryMoneyShipping.innerHTML="$"+(localStorage.getItem("totalShippingCost")/100).toFixed(2);
 console.log(totalShippingCost);
 
 totalBeforeTax=0;
 totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
-totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100);
+totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100).toFixed(2);
 
 taxMoney=((totalBeforeTax*0.10)/100).toFixed(2);
 taxPaymentSummaryMoney.innerHTML="$"+taxMoney;
 
 grandTotal=0;
 grandTotal=totalBeforeTax/100+parseInt(taxMoney);
-grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;
-
-console.log(dayjs().add(7, "day").format("dddd, MMMM DD"));
+grandTotalPaymentSummaryMoney.innerHTML="$"+(grandTotal).toFixed(2);
