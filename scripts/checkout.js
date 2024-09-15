@@ -101,13 +101,13 @@ newCart.forEach(function(product){
                 }
             }
 
-            paymentSummaryMoneyNet.innerHTML=("$"+totalCartCost/100);
+            paymentSummaryMoneyNet.innerHTML="$"+(totalCartCost/100).toFixed(2);
             totalShippingCost=0;
             for(let t=0;t<newCart.length;t++){
                 totalShippingCost+=newCart[t].deliveryCostz;
             }
             localStorage.setItem("totalShippingCost", totalShippingCost);
-            paymentSummaryMoneyShipping.innerHTML="$"+localStorage.getItem("totalShippingCost")/100;
+            paymentSummaryMoneyShipping.innerHTML="$"+(localStorage.getItem("totalShippingCost")/100).toFixed(2);
 
             totalBeforeTax=0;
             totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
@@ -118,7 +118,7 @@ newCart.forEach(function(product){
             
             grandTotal=0;
             grandTotal=totalBeforeTax/100+parseInt(taxMoney);
-            grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;
+            grandTotalPaymentSummaryMoney.innerHTML="$"+(grandTotal).toFixed(2);
         })
         productQuantity.replaceChild(updateAndSaveDiv, updateQuantityLink);
     })
@@ -137,7 +137,7 @@ newCart.forEach(function(product){
                 totalCartCost+=newCart[e].priceCents*newCart[e].quantity;
             }
         }
-        paymentSummaryMoneyNet.innerHTML=("$"+totalCartCost/100);
+        paymentSummaryMoneyNet.innerHTML=("$"+(totalCartCost/100).toFixed(2));
         totalShippingCost=0;
         for(let t=0;t<newCart.length;t++){
             totalShippingCost+=newCart[t].deliveryCostz;
@@ -145,19 +145,19 @@ newCart.forEach(function(product){
         localStorage.setItem("totalShippingCost", totalShippingCost);
         totalBeforeTax=0;
         totalBeforeTax=totalCartCost+totalShippingCost;
-        totalPaymentSummaryMoney.innerHTML="$"+totalBeforeTax/100;
-        paymentSummaryMoneyShipping.innerHTML="$"+localStorage.getItem("totalShippingCost")/100;
+        totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100).toFixed(2);
+        paymentSummaryMoneyShipping.innerHTML="$"+(localStorage.getItem("totalShippingCost")/100).toFixed(2);
 
         totalBeforeTax=0;
         totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
-        totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100);
+        totalPaymentSummaryMoney.innerHTML="$"+(totalBeforeTax/100).toFixed(2);
 
         taxMoney=((totalBeforeTax*0.10)/100).toFixed(2);
         taxPaymentSummaryMoney.innerHTML="$"+taxMoney;
 
         grandTotal=0;
         grandTotal=totalBeforeTax/100+parseInt(taxMoney);
-        grandTotalPaymentSummaryMoney.innerHTML="$"+grandTotal;
+        grandTotalPaymentSummaryMoney.innerHTML="$"+(grandTotal).toFixed(2);
 
         let totalCartItems=0;
         if(newCart.length!=0){
@@ -209,7 +209,7 @@ newCart.forEach(function(product){
         totalBeforeTax=0;
         totalBeforeTax=totalCartCost+totalShippingCost;
         totalPaymentSummaryMoney.innerHTML="$"+totalBeforeTax/100;
-        paymentSummaryMoneyShipping.innerHTML="$"+localStorage.getItem("totalShippingCost")/100;
+        paymentSummaryMoneyShipping.innerHTML="$"+(localStorage.getItem("totalShippingCost")/100).toFixed(2);
 
         totalBeforeTax=0;
         totalBeforeTax=(totalCartCost+totalShippingCost).toFixed(2);
