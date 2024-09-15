@@ -14,81 +14,37 @@ let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
 
 //Define product class
 class Product{
-    #id;
-    #image;
-    #name;
-    #rating;
-    #priceCents;
-    #keywords;
-    #quantity;
-    #deliveryOptionz;
-    #deliveryCostz;
-    #deliveryEstDate=dayjs().add(28, "day").format("dddd, MMMM DD");
+    id;
+    image;
+    name;
+    rating;
+    priceCents;
+    keywords;
+    quantity;
+    deliveryOptionz;
+    deliveryCostz;
+    deliveryEstDate;
 
     constructor(productDetails){
-        this.#id=productDetails.id;
-        this.#image=productDetails.image;
-        this.#name=productDetails.name;
-        this.#rating=productDetails.rating;
-        this.#priceCents=productDetails.priceCents;
-        this.#keywords=productDetails.keywords;
-        this.#quantity=productDetails.quantity;
-        this.#deliveryOptionz=productDetails.deliveryOptionz;
-        this.#deliveryCostz=productDetails.deliveryCostz;
-        this.#deliveryEstDate=productDetails.deliveryEstDate;
+        this.id=productDetails.id;
+        this.image=productDetails.image;
+        this.name=productDetails.name;
+        this.rating=productDetails.rating;
+        this.priceCents=productDetails.priceCents;
+        this.keywords=productDetails.keywords;
+        this.quantity=productDetails.quantity;
+        this.deliveryOptionz=productDetails.deliveryOptionz;
+        this.deliveryCostz=productDetails.deliveryCostz;
+        this.deliveryEstDate=productDetails.deliveryEstDate;
     }
+}
 
-    getId(){
-        return this.#id;
-    }
+class Clothing extends Product{
+    sizeChartLink;
 
-    getName(){
-        return this.#name;
-    }
-
-    getRating(){
-        return this.#rating;
-    }
-
-    getPrice(){
-        return this.#priceCents;
-    }
-
-    getKeywords(){
-        return this.#keywords;
-    }
-
-    getQuantity(){
-        return this.#quantity;
-    }
-
-    getDeliveryOptionz(){
-        return this.#deliveryOptionz;
-    }
-
-    getDeliveryCostz(){
-        return this.#deliveryCostz;
-    }
-
-    getDeliveryEstDate(){
-        return this.#deliveryCostz;
-    }
-
-    //Editing functions
-    setQuantity(newQuantity){
-        this.#quantity=newQuantity;
-    }
-
-    setDeliveryOptionz(newDeliveryOptionz){
-        this.#deliveryOptionz=newDeliveryOptionz;
-    }
-
-    setDeliveryCostz(newDeliveryCostz){
-        this.#deliveryCostz=newDeliveryCostz;
-    }
-
-    setDeliveryEstDate(newDeliveryEstDate){
-        this.#deliveryEstDate=newDeliveryEstDate;
+    constructor(productDetails){
+        super(productDetails);
+        this.sizeChartLink=productDetails.sizeChartLink;
     }
 }
 
@@ -144,26 +100,50 @@ products.forEach(function(product){
         optionElement.innerHTML=i;
         productQuantityChooser.appendChild(optionElement);
     }
+    if(product.type=="clothing"){
+        let sizeChartLinkButton=document.createElement("a");
+        sizeChartLinkButton.innerHTML="Size chart";
+        sizeChartLinkButton.setAttribute("href", product.sizeChartLink);
+        productContainer.appendChild(sizeChartLinkButton);
+    }
     let addToCartButton=document.createElement("button");
     addToCartButton.classList="add-to-cart-button button-primary";
     addToCartButton.innerHTML="Add to Cart";
     addToCartButton.addEventListener("click", function(){
-        let productExists=remoteCart.some(obj=>obj.name===product.name);
-        if(!productExists){         
-            let productToAdd={
-                id:product.id,
-                image:product.image,
-                name:product.name,
-                rating:product.rating,
-                priceCents:product.priceCents,
-                keywords:product.keywords,
-                quantity:parseInt(addToCartButton.parentElement.querySelector("select").value),
-                deliveryOptionz:"1",
-                deliveryCostz:0,
-                deliveryEstDate:dayjs().add(28, "day").format("dddd, MMMM DD"),
+        let productExists=remoteCart.some(obj=>obj.id===product.id);
+        if(!productExists){
+            if(product.type=="clothing"){
+                let productToAdd=new Clothing({
+                    id:product.id,
+                    image:product.image,
+                    name:product.name,
+                    rating:product.rating,
+                    priceCents:product.priceCents,
+                    keywords:product.keywords,
+                    quantity:parseInt(addToCartButton.parentElement.querySelector("select").value),
+                    deliveryOptionz:"1",
+                    deliveryCostz:0,
+                    deliveryEstDate:dayjs().add(28, "day").format("dddd, MMMM DD"),
+                    sizeChartLink:product.sizeChartLink
+                });
+                remoteCart.push(productToAdd);
+                localStorage.setItem("savedCart", JSON.stringify(remoteCart));
+            }else{
+                let productToAdd=new Product({
+                    id:product.id,
+                    image:product.image,
+                    name:product.name,
+                    rating:product.rating,
+                    priceCents:product.priceCents,
+                    keywords:product.keywords,
+                    quantity:parseInt(addToCartButton.parentElement.querySelector("select").value),
+                    deliveryOptionz:"1",
+                    deliveryCostz:0,
+                    deliveryEstDate:dayjs().add(28, "day").format("dddd, MMMM DD"),
+                });
+                remoteCart.push(productToAdd);
+                localStorage.setItem("savedCart", JSON.stringify(remoteCart));
             }
-            remoteCart.push(productToAdd);
-            localStorage.setItem("savedCart", JSON.stringify(remoteCart));
         }else{
             let productToEdit=remoteCart.find(obj=>obj.name==product.name);
             productToEdit.quantity=parseInt(productToEdit.quantity)+parseInt(addToCartButton.parentElement.querySelector("select").value);
