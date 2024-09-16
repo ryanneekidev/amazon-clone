@@ -2,14 +2,44 @@
 
 //import {products} from "/data/products.js";
 
-let xhr=new XMLHttpRequest();
-xhr.open("GET", "https://supersimplebackend.dev/products");
-xhr.send();
-
 let products;
 
-xhr.addEventListener("load",()=>{
-    products=JSON.parse(xhr.response)
+class Product{
+    id;
+    image;
+    name;
+    rating;
+    priceCents;
+    keywords;
+    quantity;
+    deliveryOptionz;
+    deliveryCostz;
+    deliveryEstDate;
+
+    constructor(productDetails){
+        this.id=productDetails.id;
+        this.image=productDetails.image;
+        this.name=productDetails.name;
+        this.rating=productDetails.rating;
+        this.priceCents=productDetails.priceCents;
+        this.keywords=productDetails.keywords;
+        this.quantity=productDetails.quantity;
+        this.deliveryOptionz=productDetails.deliveryOptionz;
+        this.deliveryCostz=productDetails.deliveryCostz;
+        this.deliveryEstDate=productDetails.deliveryEstDate;
+    }
+}
+
+class Clothing extends Product{
+    sizeChartLink;
+
+    constructor(productDetails){
+        super(productDetails);
+        this.sizeChartLink=productDetails.sizeChartLink;
+    }
+}
+
+function renderProductsGrid(){
     let initCart=[];
 
     //Create new cart in localStorage if it doesn't exist
@@ -22,40 +52,6 @@ xhr.addEventListener("load",()=>{
     let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
 
     //Define product class
-    class Product{
-        id;
-        image;
-        name;
-        rating;
-        priceCents;
-        keywords;
-        quantity;
-        deliveryOptionz;
-        deliveryCostz;
-        deliveryEstDate;
-
-        constructor(productDetails){
-            this.id=productDetails.id;
-            this.image=productDetails.image;
-            this.name=productDetails.name;
-            this.rating=productDetails.rating;
-            this.priceCents=productDetails.priceCents;
-            this.keywords=productDetails.keywords;
-            this.quantity=productDetails.quantity;
-            this.deliveryOptionz=productDetails.deliveryOptionz;
-            this.deliveryCostz=productDetails.deliveryCostz;
-            this.deliveryEstDate=productDetails.deliveryEstDate;
-        }
-    }
-
-    class Clothing extends Product{
-        sizeChartLink;
-
-        constructor(productDetails){
-            super(productDetails);
-            this.sizeChartLink=productDetails.sizeChartLink;
-        }
-    }
 
     products.forEach(function(product){
         const productsGrid=document.querySelector(".products-grid");
@@ -183,6 +179,18 @@ xhr.addEventListener("load",()=>{
         totalCartItems=0;
     }
     cartQuantity.innerHTML=totalCartItems;
-    console.log("Products loaded");
-});
+    console.log("Products rendered successfully");
+};
 
+new Promise((resolve)=>{
+    let xhr=new XMLHttpRequest();
+    xhr.open("GET", "https://supersimplebackend.dev/products");
+    xhr.send();
+    xhr.addEventListener("load", ()=>{
+        products=JSON.parse(xhr.response);
+        resolve();
+    })
+}).then(()=>{
+    console.log("Products retrieved successfully");
+    renderProductsGrid();
+})
