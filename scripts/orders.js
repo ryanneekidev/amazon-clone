@@ -87,11 +87,12 @@ async function fetchProducts(){
         return response.json();
     }).then((fetchedContent)=>{
         productsList=fetchedContent;
-        let foundProducts=[];
 
         ordersGrid.innerHTML="";
 
         ordersArray.forEach((order)=>{
+            let foundProducts=[];
+
             order.products.forEach((product)=>{
                 productsList.forEach((comparedProduct)=>{
                     if(product.productId==comparedProduct.id){
@@ -106,9 +107,11 @@ async function fetchProducts(){
                 })
             })
 
-
-            ordersGrid.innerHTML+=`
-            <div class="order-container">
+            let randId=Math.random(0,10);
+            let orderContainer=document.createElement("div");
+            orderContainer.className="order-container";
+            orderContainer.setAttribute("data-uniqueId", randId);
+            orderContainer.innerHTML+=`
                 <div class="order-header">
                     <div class="order-header-left-section">
                         <div class="order-date">
@@ -125,11 +128,13 @@ async function fetchProducts(){
                         <div>${order.id}</div>
                     </div>
                 </div>
-                <div class="order-details-grid"></div>
-            </div>`
+                <div class="order-details-grid"></div>`;
+            ordersGrid.appendChild(orderContainer);
             foundProducts.forEach((product)=>{
-                let orderContainer=document.querySelector(".order-container")
-                let orderDetailsGrid=document.querySelector(".order-details-grid");
+                
+                let orderContainer=ordersGrid.querySelector(`[data-uniqueId='${randId}']`);
+                let orderDetailsGrid=orderContainer.querySelector(".order-details-grid");
+
                 orderDetailsGrid.innerHTML+=`
                 <div class="product-image-container">
                     <img src="${product.image}">
