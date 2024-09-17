@@ -100,6 +100,7 @@ async function fetchProducts(){
                             image:comparedProduct.image,
                             name:comparedProduct.name,
                             estimatedDeliveryTime:product.estimatedDeliveryTime,
+                            id:product.productId,
                             quantity:product.quantity
                         });
                         console.log(foundProducts);
@@ -156,7 +157,7 @@ async function fetchProducts(){
                 </div>
 
                 <div class="product-actions">
-                    <a href="tracking.html">
+                    <a href="tracking.html?productId=${product.id}&estimatedDeliveryTime=${product.estimatedDeliveryTime}&quantity=${product.quantity}">
                         <button class="track-package-button button-secondary">
                         Track package
                         </button>
