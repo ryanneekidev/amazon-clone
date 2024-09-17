@@ -5,26 +5,26 @@
 let products;
 
 class Product{
-    id;
+    productId;
     image;
     name;
     rating;
     priceCents;
     keywords;
     quantity;
-    deliveryOptionz;
+    deliveryOptionId;
     deliveryCostz;
     deliveryEstDate;
 
     constructor(productDetails){
-        this.id=productDetails.id;
+        this.productId=productDetails.productId;
         this.image=productDetails.image;
         this.name=productDetails.name;
         this.rating=productDetails.rating;
         this.priceCents=productDetails.priceCents;
         this.keywords=productDetails.keywords;
         this.quantity=productDetails.quantity;
-        this.deliveryOptionz=productDetails.deliveryOptionz;
+        this.deliveryOptionId=productDetails.deliveryOptionId;
         this.deliveryCostz=productDetails.deliveryCostz;
         this.deliveryEstDate=productDetails.deliveryEstDate;
     }
@@ -119,14 +119,14 @@ function renderProductsGrid(){
             if(!productExists){
                 if(product.type=="clothing"){
                     let productToAdd=new Clothing({
-                        id:product.id,
+                        productId:product.id,
                         image:product.image,
                         name:product.name,
                         rating:product.rating,
                         priceCents:product.priceCents,
                         keywords:product.keywords,
                         quantity:parseInt(addToCartButton.parentElement.querySelector("select").value),
-                        deliveryOptionz:"1",
+                        deliveryOptionId:"1",
                         deliveryCostz:0,
                         deliveryEstDate:dayjs().add(28, "day").format("dddd, MMMM DD"),
                         sizeChartLink:product.sizeChartLink
@@ -135,14 +135,14 @@ function renderProductsGrid(){
                     localStorage.setItem("savedCart", JSON.stringify(remoteCart));
                 }else{
                     let productToAdd=new Product({
-                        id:product.id,
+                        productId:product.id,
                         image:product.image,
                         name:product.name,
                         rating:product.rating,
                         priceCents:product.priceCents,
                         keywords:product.keywords,
                         quantity:parseInt(addToCartButton.parentElement.querySelector("select").value),
-                        deliveryOptionz:"1",
+                        deliveryOptionId:"1",
                         deliveryCostz:0,
                         deliveryEstDate:dayjs().add(28, "day").format("dddd, MMMM DD"),
                     });
@@ -197,15 +197,18 @@ new Promise((resolve)=>{
 */
 
 async function fetchAndRender(){
-    await fetch("https://supersimplebackend.dev/products").then((response)=>{
-        return response.json();
-    }).then((fetchedContent)=>{
-        console.log("Products fetched successfully")
-        products=fetchedContent;
-    });
-    renderProductsGrid();
+    try{
+        await fetch("https://supersimplebackend.dev/products").then((response)=>{
+            return response.json();
+        }).then((fetchedContent)=>{
+            console.log("Products fetched successfully")
+            products=fetchedContent;
+        });
+        renderProductsGrid();
+    }catch(error){
+        console.log("Error: "+error.message);
+    }
 }
-
 fetchAndRender();
 
 /*
