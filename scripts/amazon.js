@@ -181,7 +181,7 @@ function renderProductsGrid(){
     cartQuantity.innerHTML=totalCartItems;
     console.log("Products rendered successfully");
 };
-
+/*
 new Promise((resolve)=>{
     let xhr=new XMLHttpRequest();
     xhr.open("GET", "https://supersimplebackend.dev/products");
@@ -194,3 +194,26 @@ new Promise((resolve)=>{
     console.log("Products retrieved successfully");
     renderProductsGrid();
 })
+*/
+
+async function fetchAndRender(){
+    await fetch("https://supersimplebackend.dev/products").then((response)=>{
+        return response.json();
+    }).then((fetchedContent)=>{
+        console.log("Products fetched successfully")
+        products=fetchedContent;
+    });
+    renderProductsGrid();
+}
+
+fetchAndRender();
+
+/*
+fetch("https://supersimplebackend.dev/products").then((response)=>{
+    return response.json();
+}).then((fetchedContent)=>{
+    console.log("Products fetched successfully")
+    products=fetchedContent;
+    renderProductsGrid();
+})
+*/ 
