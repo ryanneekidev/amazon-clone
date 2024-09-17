@@ -99,9 +99,13 @@ async function fetchProducts(){
                         foundProducts.push({
                             image:comparedProduct.image,
                             name:comparedProduct.name,
-                            estimatedDeliveryTime:product.estimatedDeliveryTime,
+                            estimatedDeliveryTime:dayjs().add(28, "day").format("dddd, MMMM DD"),
                             id:product.productId,
-                            quantity:product.quantity
+                            quantity:product.quantity,
+                            priceCents:comparedProduct.priceCents,
+                            deliveryOptionId:"1",
+                            deliveryCostz:0,
+
                         });
                         console.log(foundProducts);
                     }
@@ -164,6 +168,22 @@ async function fetchProducts(){
                     </a>
                 </div>
                 `;
+                let buyAgainButtons=orderContainer.getElementsByClassName("buy-again-button");
+
+                console.log(product);
+                /*
+                for(let i=0; i<buyAgainButtons.length; i++){
+                    buyAgainButtons[i].addEventListener("click", ()=>{
+                        let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
+                        let productExists=remoteCart.some(obj=>obj.id===product.productId);
+                        if(!productExists){
+                            console.log(productExists);
+                        }
+                    })
+                }
+                */
+
+
                 orderContainer.appendChild(orderDetailsGrid);
             })
         })
