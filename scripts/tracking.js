@@ -4,6 +4,20 @@ let estimatedDeliveryTime=url.searchParams.get("estimatedDeliveryTime");
 let quantity=url.searchParams.get("quantity");
 let productsList;
 
+function updateCartItemsDisplay(){
+    let remoteCart=JSON.parse(localStorage.getItem("savedCart"))
+    let totalCartItems=0;
+    let cartQuantity=document.querySelector(".cart-quantity");
+    if(remoteCart.length!=0){
+        for(let a=0;a<remoteCart.length;a++){
+            totalCartItems+=remoteCart[a].quantity;
+        }
+    }else{
+        totalCartItems=0;
+    }
+    cartQuantity.innerHTML=totalCartItems;
+}
+
 async function fetchProductsAndRender(){
     await fetch("https://supersimplebackend.dev/products").then((response)=>{
         return response.json();
@@ -54,6 +68,7 @@ async function fetchProductsAndRender(){
           <div class="progress-bar"></div>
         </div>
       </div>`;
+      updateCartItemsDisplay();
     })
 }
 

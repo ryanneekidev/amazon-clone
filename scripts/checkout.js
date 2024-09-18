@@ -33,7 +33,7 @@ if(JSON.parse(localStorage.getItem("savedCart")).length!=0){
         //Create delivery date
         let deliveryDate=document.createElement("div");
         deliveryDate.className="delivery-date";
-        deliveryDate.innerHTML="Delivery date: "+product.deliveryEstDate;
+        deliveryDate.innerHTML="Delivery date: "+product.estimatedDeliveryTime;
         cartItemContainer.appendChild(deliveryDate);
         //Create item details grid
         let cartItemDetailsGrid=document.createElement("div");
@@ -202,10 +202,10 @@ if(JSON.parse(localStorage.getItem("savedCart")).length!=0){
             if(deliveryOptionInput1.checked==true){
                 product.deliveryOptionId="1";
                 product.deliveryCostz=0;
-                product.deliveryEstDate=dayjs().add(28, "day").format("dddd, MMMM DD");
+                product.estimatedDeliveryTime=dayjs().add(28, "day").format("dddd, MMMM DD");
                 localStorage.setItem("savedCart", JSON.stringify(newCart));
-                deliveryDate.innerHTML="Delivery date: "+product.deliveryEstDate;
-                deliveryOptionDate1.innerHTML=product.deliveryEstDate;
+                deliveryDate.innerHTML="Delivery date: "+product.estimatedDeliveryTime;
+                deliveryOptionDate1.innerHTML=product.estimatedDeliveryTime;
             }
             console.log(newCart);
             totalShippingCost=0;
@@ -240,7 +240,7 @@ if(JSON.parse(localStorage.getItem("savedCart")).length!=0){
         //Create option delivery date
         let deliveryOptionDate1=document.createElement("div");
         deliveryOptionDate1.className="delivery-option-date";
-        deliveryOptionDate1.innerHTML=product.deliveryEstDate;
+        deliveryOptionDate1.innerHTML=product.estimatedDeliveryTime;
         deliveryOptionInfo1.appendChild(deliveryOptionDate1);
         //Create option delivery price
         let deliveryOptionPrice1=document.createElement("div");
@@ -261,10 +261,10 @@ if(JSON.parse(localStorage.getItem("savedCart")).length!=0){
             if(deliveryOptionInput2.checked==true){
                 product.deliveryOptionId="2";
                 product.deliveryCostz=499;
-                product.deliveryEstDate=dayjs().add(14, "day").format("dddd, MMMM DD");
+                product.estimatedDeliveryTime=dayjs().add(14, "day").format("dddd, MMMM DD");
                 localStorage.setItem("savedCart", JSON.stringify(newCart));
-                deliveryDate.innerHTML="Delivery date: "+product.deliveryEstDate;
-                deliveryOptionDate2.innerHTML=product.deliveryEstDate;
+                deliveryDate.innerHTML="Delivery date: "+product.estimatedDeliveryTime;
+                deliveryOptionDate2.innerHTML=product.estimatedDeliveryTime;
             }
             totalShippingCost=0;
             localStorage.setItem("totalShippingCost", totalShippingCost);
@@ -321,10 +321,10 @@ if(JSON.parse(localStorage.getItem("savedCart")).length!=0){
             if(deliveryOptionInput3.checked==true){
                 product.deliveryOptionId="3";
                 product.deliveryCostz=999;
-                product.deliveryEstDate=dayjs().add(7, "day").format("dddd, MMMM DD");
+                product.estimatedDeliveryTime=dayjs().add(7, "day").format("dddd, MMMM DD");
                 localStorage.setItem("savedCart", JSON.stringify(newCart));
-                deliveryDate.innerHTML="Delivery date: "+product.deliveryEstDate;
-                deliveryOptionDate3.innerHTML=product.deliveryEstDate;
+                deliveryDate.innerHTML="Delivery date: "+product.estimatedDeliveryTime;
+                deliveryOptionDate3.innerHTML=product.estimatedDeliveryTime;
             }
             totalShippingCost=0;
             localStorage.setItem("totalShippingCost", totalShippingCost);
@@ -444,6 +444,7 @@ placeOrderButton.addEventListener("click", async ()=>{
             let ordersArray=JSON.parse(localStorage.getItem("savedOrders"));
             ordersArray.unshift(order);
             localStorage.setItem("savedOrders", JSON.stringify(ordersArray));
+            localStorage.setItem("savedCart", JSON.stringify([]));
             console.log("Cart uploaded successfully");
             window.location.href="orders.html";
         }else{
@@ -453,5 +454,3 @@ placeOrderButton.addEventListener("click", async ()=>{
         console.log("There was a problem uploading the cart");
     }
 })
-
-let se

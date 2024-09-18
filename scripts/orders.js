@@ -82,6 +82,20 @@ let ordersArray=JSON.parse(localStorage.getItem("savedOrders"));
 
 let productsList;
 
+function updateCartItemsDisplay(){
+    let remoteCart=JSON.parse(localStorage.getItem("savedCart"))
+    let totalCartItems=0;
+    let cartQuantity=document.querySelector(".cart-quantity");
+    if(remoteCart.length!=0){
+        for(let a=0;a<remoteCart.length;a++){
+            totalCartItems+=remoteCart[a].quantity;
+        }
+    }else{
+        totalCartItems=0;
+    }
+    cartQuantity.innerHTML=totalCartItems;
+}
+
 async function fetchProducts(){
     await fetch("https://supersimplebackend.dev/products").then((response)=>{
         return response.json();
@@ -104,8 +118,7 @@ async function fetchProducts(){
                             quantity:product.quantity,
                             priceCents:comparedProduct.priceCents,
                             deliveryOptionId:"1",
-                            deliveryCostz:0,
-
+                            deliveryCostz:0
                         });
                         console.log(foundProducts);
                     }
@@ -113,6 +126,7 @@ async function fetchProducts(){
             })
 
             let randId=Math.random(0,10);
+            let randId2=Math.random(0,69);
             let orderContainer=document.createElement("div");
             orderContainer.className="order-container";
             orderContainer.setAttribute("data-uniqueId", randId);
@@ -132,14 +146,15 @@ async function fetchProducts(){
                         <div class="order-header-label">Order ID:</div>
                         <div>${order.id}</div>
                     </div>
-                </div>
-                <div class="order-details-grid"></div>`;
+                </div>`;
             ordersGrid.appendChild(orderContainer);
-            foundProducts.forEach((product)=>{
-                
-                let orderContainer=ordersGrid.querySelector(`[data-uniqueId='${randId}']`);
-                let orderDetailsGrid=orderContainer.querySelector(".order-details-grid");
 
+            foundProducts.forEach((product)=>{
+                let orderContainer=ordersGrid.querySelector(`[data-uniqueId='${randId}']`);
+                let orderDetailsGrid=document.createElement("div");
+                orderDetailsGrid.className="order-details-grid";
+                orderContainer.appendChild(orderDetailsGrid);
+                
                 orderDetailsGrid.innerHTML+=`
                 <div class="product-image-container">
                     <img src="${product.image}">
@@ -154,10 +169,7 @@ async function fetchProducts(){
                     <div class="product-quantity">
                         Quantity: ${product.quantity}
                     </div>
-                    <button class="buy-again-button button-primary">
-                        <img class="buy-again-icon" src="images/icons/buy-again.png">
-                        <span class="buy-again-message">Buy it again</span>
-                    </button>
+
                 </div>
 
                 <div class="product-actions">
@@ -168,9 +180,35 @@ async function fetchProducts(){
                     </a>
                 </div>
                 `;
-                let buyAgainButtons=orderContainer.getElementsByClassName("buy-again-button");
 
-                console.log(product);
+                let randId3=Math.random(0,56);
+
+                
+                
+                let buyAgainButton=document.createElement("button");
+                buyAgainButton.classList="buy-again-button button-primary";
+                buyAgainButton.setAttribute("data-uniqueId2", randId3);
+                buyAgainButton.innerHTML=`
+                    <img class="buy-again-icon" src="images/icons/buy-again.png">
+                    <span class="buy-again-message">Buy it again</span>`;
+                buyAgainButton.addEventListener("click", ()=>{
+                    let remoteCart=JSON.parse(localStorage.getItem("savedCart"));
+
+                    let productExists=remoteCart.some(obj=>obj.id===product.id);
+                    if(!productExists){
+                        console.log("product does not exist");
+                        remoteCart.push(product);
+                        localStorage.setItem("savedCart", JSON.stringify(remoteCart));
+                    }else{
+                        console.log("product already exists");
+                        let productToEdit=remoteCart.find(obj=>obj.name==product.name);
+                        productToEdit.quantity+=1;
+                        localStorage.setItem("savedCart", JSON.stringify(remoteCart));
+                    }
+                    updateCartItemsDisplay();
+                })
+                orderDetailsGrid.querySelector(".product-details").appendChild(buyAgainButton);
+                
                 /*
                 for(let i=0; i<buyAgainButtons.length; i++){
                     buyAgainButtons[i].addEventListener("click", ()=>{
@@ -191,3 +229,5 @@ async function fetchProducts(){
 } 
 
 fetchProducts();
+
+updateCartItemsDisplay();

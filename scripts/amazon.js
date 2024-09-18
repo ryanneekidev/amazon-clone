@@ -14,7 +14,7 @@ class Product{
     quantity;
     deliveryOptionId;
     deliveryCostz;
-    deliveryEstDate;
+    estimatedDeliveryTime;
 
     constructor(productDetails){
         this.productId=productDetails.productId;
@@ -26,7 +26,7 @@ class Product{
         this.quantity=productDetails.quantity;
         this.deliveryOptionId=productDetails.deliveryOptionId;
         this.deliveryCostz=productDetails.deliveryCostz;
-        this.deliveryEstDate=productDetails.deliveryEstDate;
+        this.estimatedDeliveryTime=productDetails.estimatedDeliveryTime;
     }
 }
 
@@ -128,7 +128,7 @@ function renderProductsGrid(){
                         quantity:parseInt(addToCartButton.parentElement.querySelector("select").value),
                         deliveryOptionId:"1",
                         deliveryCostz:0,
-                        deliveryEstDate:dayjs().add(28, "day").format("dddd, MMMM DD"),
+                        estimatedDeliveryTime:dayjs().add(28, "day").format("dddd, MMMM DD"),
                         sizeChartLink:product.sizeChartLink
                     });
                     remoteCart.push(productToAdd);
@@ -144,7 +144,7 @@ function renderProductsGrid(){
                         quantity:parseInt(addToCartButton.parentElement.querySelector("select").value),
                         deliveryOptionId:"1",
                         deliveryCostz:0,
-                        deliveryEstDate:dayjs().add(28, "day").format("dddd, MMMM DD"),
+                        estimatedDeliveryTime:dayjs().add(28, "day").format("dddd, MMMM DD"),
                     });
                     remoteCart.push(productToAdd);
                     localStorage.setItem("savedCart", JSON.stringify(remoteCart));
