@@ -270,7 +270,7 @@ if(JSON.parse(localStorage.getItem("savedCart")).length!=0){
             localStorage.setItem("totalShippingCost", totalShippingCost);
             console.log(newCart);
             for(let t=0;t<newCart.length;t++){
-                totalShippingCost+=newCart[t].deliveryCostz;
+                totalShippingCost+=Math.round(newCart[t].deliveryCostz);
             }
             localStorage.setItem("totalShippingCost", totalShippingCost);
             totalBeforeTax=0;
